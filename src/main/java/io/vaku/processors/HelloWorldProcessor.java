@@ -15,5 +15,6 @@ public class HelloWorldProcessor implements RequestProcessor {
                 "\r\n" +
                 "<html><body><h1>Hello World!!!</h1><table><tr><td>1</td><td>2</td></tr></table></body></html>";
         output.write(response.getBytes(StandardCharsets.UTF_8));
+        output.close();
     }
 }

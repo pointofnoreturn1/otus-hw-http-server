@@ -2,27 +2,25 @@ package io.vaku;
 
 import java.io.IOException;
 import java.net.ServerSocket;
-import java.net.Socket;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class HttpServer {
-    private int port;
-    private Dispatcher dispatcher;
+    private final int port;
+    private final Dispatcher dispatcher;
+    private final ExecutorService executorService;
 
     public HttpServer(int port) {
         this.port = port;
         this.dispatcher = new Dispatcher();
+        this.executorService = Executors.newFixedThreadPool(10);
     }
 
     public void start() {
         try (ServerSocket serverSocket = new ServerSocket(port)) {
             System.out.println("Сервер запущен на порту: " + port);
-            try (Socket socket = serverSocket.accept()) {
-                byte[] buffer = new byte[8192];
-                int n = socket.getInputStream().read(buffer);
-                String rawRequest = new String(buffer, 0, n);
-                HttpRequest request = new HttpRequest(rawRequest);
-                request.info(true);
-                dispatcher.execute(request, socket.getOutputStream());
+            while (true) {
+                executorService.execute(new ClientHandler(serverSocket.accept(), dispatcher));
             }
         } catch (IOException e) {
             e.printStackTrace();
