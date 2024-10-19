@@ -15,5 +15,6 @@ public class DefaultInternalServerErrorProcessor implements RequestProcessor {
                 "\r\n" +
                 "<html><body><h1>Internal Server Error!!!</h1></body></html>";
         output.write(response.getBytes(StandardCharsets.UTF_8));
+        output.close();
     }
 }

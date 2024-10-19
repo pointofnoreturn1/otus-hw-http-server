@@ -15,5 +15,6 @@ public class DefaultBadRequestProcessor implements RequestProcessor {
                 "\r\n" +
                 "<html><body><h1>Bad Request: " + request.getException().getMessage() + "</h1></body></html>";
         output.write(response.getBytes(StandardCharsets.UTF_8));
+        output.close();
     }
 }
